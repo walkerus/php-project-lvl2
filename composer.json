@@ -1,0 +1,34 @@
+{
+    "name": "hexlet/code",
+    "description": "https://ru.hexlet.io/professions/php/projects/46",
+    "type": "library",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "walkerus",
+            "email": "zfirewolfz@yandex.ru"
+        }
+    ],
+    "bin": [
+        "bin/gendiff"
+    ],
+    "autoload": {
+        "files": [
+            "src/Differ.php"
+        ]
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/phpcs"
+    },
+    "require": {
+        "php": "^7.4",
+        "wp-cli/php-cli-tools": "^0.11.11",
+        "docopt/docopt": "^1.0",
+        "ext-json": "*",
+        "funct/funct": "^1.5"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.5"
+    }
+}
