@@ -26,27 +26,35 @@ function genDiff(string $firstFile, string $secondFile): string
 
 function buildDiff(array $data1, array $data2): array
 {
-    $format = '%s %s: %s';
     $keys = sortBy(array_keys($data1) + array_keys($data2), fn($v) => $v);
 
     return array_reduce(
         $keys,
-        function (array $current, $key) use ($data1, $data2, $format) {
+        function (array $current, $key) use ($data1, $data2) {
             if (array_key_exists($key, $data1) && !array_key_exists($key, $data2)) {
-                $current[] = sprintf($format, '-', $key, $data1[$key]);
+                $current[] = diffFormat('-', $key, $data1[$key]);
             } elseif (!array_key_exists($key, $data1) && array_key_exists($key, $data2)) {
-                $current[] = sprintf($format, '+', $key, $data2[$key]);
+                $current[] = diffFormat('+', $key, $data2[$key]);
             } elseif ($data1[$key] != $data2[$key]) {
-                $current[] = sprintf($format, '-', $key, $data1[$key]);
-                $current[] = sprintf($format, '+', $key, $data2[$key]);
+                $current[] = diffFormat('-', $key, $data1[$key]);
+                $current[] = diffFormat('+', $key, $data2[$key]);
             } else {
-                $current[] = sprintf($format, ' ', $key, $data1[$key]);
+                $current[] = diffFormat(' ', $key, $data1[$key]);
             }
 
             return $current;
         },
         [],
     );
+}
+
+function diffFormat(string $type, string $key, $value): string
+{
+    if (is_bool($value)) {
+        $value = $value ? 'true' : 'false';
+    }
+
+    return sprintf('%s %s: %s', $type, $key, $value);
 }
 
 /**
