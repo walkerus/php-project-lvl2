@@ -7,6 +7,7 @@ namespace Differ\Differ;
 use Exception;
 
 use function Funct\Collection\sortBy;
+use function Differ\Parser\parse;
 
 /**
  * @param string $firstFile
@@ -16,9 +17,9 @@ use function Funct\Collection\sortBy;
  */
 function genDiff(string $firstFile, string $secondFile): string
 {
-    $fileContent1 = getFileContent($firstFile);
-    $fileContent2 = getFileContent($secondFile);
-    $diffs = buildDiff(json_decode($fileContent1, true), json_decode($fileContent2, true));
+    ['content' => $firstFileContent, 'extension' => $firstFileExt] = getFileData($firstFile);
+    ['content' => $secondFileContent, 'extension' => $secondFileExt] = getFileData($secondFile);
+    $diffs = buildDiff(parse($firstFileContent, $firstFileExt), parse($secondFileContent, $secondFileExt));
     $diffsAsString = implode("\n  ", $diffs);
 
     return "{\n  $diffsAsString\n}\n";
@@ -59,14 +60,17 @@ function diffFormat(string $type, string $key, $value): string
 
 /**
  * @param string $filepath
- * @return string
+ * @return array
  * @throws Exception
  */
-function getFileContent(string $filepath): string
+function getFileData(string $filepath): array
 {
     if (!file_exists($filepath)) {
         throw new Exception("File '$filepath' does not exist");
     }
 
-    return file_get_contents($filepath);
+    return [
+        'content' => file_get_contents($filepath),
+        'extension' => pathinfo($filepath, PATHINFO_EXTENSION)
+    ];
 }
