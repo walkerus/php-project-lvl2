@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Differ\Formatters\Stylish;
 
 use Exception;
+
 use const Differ\Differ\DIFF_TYPE_ADDED;
 use const Differ\Differ\DIFF_TYPE_CHANGED;
 use const Differ\Differ\DIFF_TYPE_DELETED;
@@ -23,7 +24,7 @@ function format(array $diffTree, int $depth = 1): string
     foreach ($diffTree['children'] as $child) {
         $type = $child['type'];
         $key = $child['key'];
-        $value = $child['value'];
+        $value = $child['value'] ?? null;
         $indent = buildIndent($depth);
         $buildString = fn(string $prefix, string $value) => "$indent$prefix $key: $value";
 
