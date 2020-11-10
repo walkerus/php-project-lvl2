@@ -5,7 +5,7 @@ common:
   setting6:
     key: value
     doge:
-      wow: ''
+      wow: '_'
 group1:
   baz: bas
   foo: bar
