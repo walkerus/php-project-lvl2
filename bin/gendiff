@@ -12,6 +12,7 @@ if (file_exists($autoloadPath1)) {
 }
 
 use function \Differ\Differ\genDiff;
+use const \Differ\Differ\FORMAT_STYLISH;
 
 $doc = <<<DOC
 gendiff -h
@@ -34,6 +35,6 @@ $args = Docopt::handle($doc, array('version' => 'gendiff 1.0.0'));
 $result = genDiff(
     $args['<firstFile>'],
     $args['<secondFile>'],
-    $args['<fmt>'],
+    $args['<fmt>'] ?? FORMAT_STYLISH,
 );
 print_r($result);
