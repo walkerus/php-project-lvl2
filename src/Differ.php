@@ -8,6 +8,15 @@ use Exception;
 
 use function Funct\Collection\sortBy;
 use function Differ\Parser\parse;
+use function Differ\Formatters\format;
+use function Funct\Collection\union;
+
+const FORMAT_STYLISH = 'stylish';
+const DIFF_TYPE_DELETED = 'deleted';
+const DIFF_TYPE_ADDED = 'added';
+const DIFF_TYPE_CHANGED = 'changed';
+const DIFF_TYPE_UNCHANGED = 'unchanged';
+const DIFF_TYPE_NESTED = 'nested';
 
 /**
  * @param string $firstFile
@@ -15,48 +24,69 @@ use function Differ\Parser\parse;
  * @return string
  * @throws Exception
  */
-function genDiff(string $firstFile, string $secondFile): string
+function genDiff(string $firstFile, string $secondFile, string $format = FORMAT_STYLISH): string
 {
     ['content' => $firstFileContent, 'extension' => $firstFileExt] = getFileData($firstFile);
     ['content' => $secondFileContent, 'extension' => $secondFileExt] = getFileData($secondFile);
-    $diffs = buildDiff(parse($firstFileContent, $firstFileExt), parse($secondFileContent, $secondFileExt));
-    $diffsAsString = implode("\n  ", $diffs);
+    $diffTree = [
+        'root',
+        'children' => buildDiff(
+            parse($firstFileContent, $firstFileExt),
+            parse($secondFileContent, $secondFileExt)
+        ),
+    ];
 
-    return "{\n  $diffsAsString\n}\n";
+    return format($diffTree, $format);
 }
 
 function buildDiff(array $data1, array $data2): array
 {
-    $keys = sortBy(array_keys($data1) + array_keys($data2), fn($v) => $v);
+    $keys = sortBy(union(array_keys($data1), array_keys($data2)), fn($v) => $v);
 
-    return array_reduce(
-        $keys,
-        function (array $current, $key) use ($data1, $data2) {
-            if (array_key_exists($key, $data1) && !array_key_exists($key, $data2)) {
-                $current[] = diffFormat('-', $key, $data1[$key]);
-            } elseif (!array_key_exists($key, $data1) && array_key_exists($key, $data2)) {
-                $current[] = diffFormat('+', $key, $data2[$key]);
-            } elseif ($data1[$key] != $data2[$key]) {
-                $current[] = diffFormat('-', $key, $data1[$key]);
-                $current[] = diffFormat('+', $key, $data2[$key]);
-            } else {
-                $current[] = diffFormat(' ', $key, $data1[$key]);
-            }
+    return array_map(function (string $key) use ($data1, $data2): array {
+        $value1 = $data1[$key] ?? null;
+        $value2 = $data2[$key] ?? null;
 
-            return $current;
-        },
-        [],
-    );
+        if (!array_key_exists($key, $data2)) {
+            return [
+                'key' => $key,
+                'type' => DIFF_TYPE_DELETED,
+                'value' => $value1,
+            ];
+        }
+
+        if (!array_key_exists($key, $data1)) {
+            return [
+                'key' => $key,
+                'type' => DIFF_TYPE_ADDED,
+                'value' => $value2,
+            ];
+        }
+
+        if (is_array($value1) && is_array($value2)) {
+            return [
+                'key' => $key,
+                'type' => DIFF_TYPE_NESTED,
+                'children' => buildDiff($value1, $value2),
+            ];
+        }
+
+        if ($value1 != $value2) {
+            return [
+                'key' => $key,
+                'type' => DIFF_TYPE_CHANGED,
+                'value' => [$value1, $value2],
+            ];
+        }
+
+        return [
+            'key' => $key,
+            'type' => DIFF_TYPE_UNCHANGED,
+            'value' => $value1,
+        ];
+    }, $keys);
 }
 
-function diffFormat(string $type, string $key, $value): string
-{
-    if (is_bool($value)) {
-        $value = $value ? 'true' : 'false';
-    }
-
-    return sprintf('%s %s: %s', $type, $key, $value);
-}
 
 /**
  * @param string $filepath
