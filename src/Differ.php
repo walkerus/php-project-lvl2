@@ -12,6 +12,7 @@ use function Differ\Formatters\format;
 use function Funct\Collection\union;
 
 const FORMAT_STYLISH = 'stylish';
+const FORMAT_PLAIN = 'plain';
 const DIFF_TYPE_DELETED = 'deleted';
 const DIFF_TYPE_ADDED = 'added';
 const DIFF_TYPE_CHANGED = 'changed';
@@ -21,6 +22,7 @@ const DIFF_TYPE_NESTED = 'nested';
 /**
  * @param string $firstFile
  * @param string $secondFile
+ * @param string $format
  * @return string
  * @throws Exception
  */

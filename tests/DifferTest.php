@@ -13,33 +13,45 @@ class DifferTest extends TestCase
 {
     /**
      * @dataProvider dataProvider
-     * @param string $expectedFile
-     * @param string $firstFile
-     * @param string $secondFile
+     * @param string $expected
+     * @param string $format
+     * @param array $filesCombination
      * @throws Exception
      */
-    public function testGenDiff(string $expectedFile, string $firstFile, string $secondFile): void
+    public function testGenDiff(string $expected, string $format, array $filesCombination): void
     {
-        $this->assertStringEqualsFile($expectedFile, genDiff($firstFile, $secondFile));
+        foreach ($filesCombination as $files) {
+            $this->assertStringEqualsFile($expected, genDiff($files[0], $files[1], $format));
+        }
     }
 
     public function dataProvider(): array
     {
+        $filesCombination = [
+            [
+                $this->getFixtureFullPath('file1.json'),
+                $this->getFixtureFullPath('file2.json'),
+            ],
+            [
+                $this->getFixtureFullPath('file1.json'),
+                $this->getFixtureFullPath('file2.yml'),
+            ],
+            [
+                $this->getFixtureFullPath('file1.yml'),
+                $this->getFixtureFullPath('file2.yml'),
+            ],
+        ];
+
         return [
-            'json' => [
-                'expectedFile' => $this->getFixtureFullPath('diff'),
-                'firstFile' => $this->getFixtureFullPath('file1.json'),
-                'secondFile' => $this->getFixtureFullPath('file2.json')
+            'stylish' => [
+                'expected' => $this->getFixtureFullPath('diff.stylish'),
+                'format' => 'stylish',
+                'filesCombination' => $filesCombination,
             ],
-            'json and yml' => [
-                'expectedFile' => $this->getFixtureFullPath('diff'),
-                'firstFile' => $this->getFixtureFullPath('file1.json'),
-                'secondFile' => $this->getFixtureFullPath('file2.yml')
-            ],
-            'yml' => [
-                'expectedFile' => $this->getFixtureFullPath('diff'),
-                'firstFile' => $this->getFixtureFullPath('file1.yml'),
-                'secondFile' => $this->getFixtureFullPath('file2.yml')
+            'plain' => [
+                'expected' => $this->getFixtureFullPath('diff.plain'),
+                'format' => 'plain',
+                'filesCombination' => $filesCombination
             ],
         ];
     }

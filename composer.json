@@ -13,8 +13,9 @@
     "autoload": {
         "files": [
             "src/Differ.php",
-            "src/Formaters/Formatter.php",
-            "src/Formaters/Slylish.php",
+            "src/Formatter.php",
+            "src/Formaters/Stylish.php",
+            "src/Formaters/Plain.php",
             "src/Parser/Parser.php"
         ]
     },
