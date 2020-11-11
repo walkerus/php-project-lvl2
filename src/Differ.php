@@ -13,6 +13,7 @@ use function Funct\Collection\union;
 
 const FORMAT_STYLISH = 'stylish';
 const FORMAT_PLAIN = 'plain';
+const FORMAT_JSON = 'json';
 const DIFF_TYPE_DELETED = 'deleted';
 const DIFF_TYPE_ADDED = 'added';
 const DIFF_TYPE_CHANGED = 'changed';
@@ -31,7 +32,7 @@ function genDiff(string $firstFile, string $secondFile, string $format = FORMAT_
     ['content' => $firstFileContent, 'extension' => $firstFileExt] = getFileData($firstFile);
     ['content' => $secondFileContent, 'extension' => $secondFileExt] = getFileData($secondFile);
     $diffTree = [
-        'root',
+        'type' => 'root',
         'children' => buildDiff(
             parse($firstFileContent, $firstFileExt),
             parse($secondFileContent, $secondFileExt)

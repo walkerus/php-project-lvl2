@@ -35,6 +35,6 @@ $args = Docopt::handle($doc, array('version' => 'gendiff 1.0.0'));
 $result = genDiff(
     $args['<firstFile>'],
     $args['<secondFile>'],
-    $args['<fmt>'] ?? FORMAT_STYLISH,
+    $args['--format'],
 );
-print_r($result);
+print_r($result . PHP_EOL);

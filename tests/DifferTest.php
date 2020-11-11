@@ -53,6 +53,11 @@ class DifferTest extends TestCase
                 'format' => 'plain',
                 'filesCombination' => $filesCombination
             ],
+            'json' => [
+                'expected' => $this->getFixtureFullPath('diff.json'),
+                'format' => 'json',
+                'filesCombination' => $filesCombination
+            ],
         ];
     }
 
