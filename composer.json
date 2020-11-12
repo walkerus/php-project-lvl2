@@ -21,7 +21,8 @@
         ]
     },
     "scripts": {
-        "phpcs": "vendor/bin/phpcs"
+        "phpcs": "vendor/bin/phpcs",
+        "gendiff": "scripts/gendiff"
     },
     "require": {
         "php": "^7.4",
