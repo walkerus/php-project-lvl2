@@ -22,8 +22,11 @@
     },
     "scripts": {
         "phpcs": "vendor/bin/phpcs",
-        "gendiff": "scripts/gendiff"
+        "gendiff": "bin/gendiff"
     },
+    "bin": [
+        "bin/gendiff"
+    ],
     "require": {
         "php": "^7.4",
         "wp-cli/php-cli-tools": "^0.11.11",
