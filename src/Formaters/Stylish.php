@@ -35,9 +35,10 @@ function format(array $diffTree, int $depth = 1): string
             case DIFF_TYPE_ADDED:
                 return $buildString('+', formatValue($value, $depth));
             case DIFF_TYPE_CHANGED:
-                $lines[] = $buildString('-', formatValue($value[0], $depth));
-                $lines[] = $buildString('+', formatValue($value[1], $depth));
-                return implode("\n", $lines);
+                return implode("\n", [
+                    $buildString('-', formatValue($value[0], $depth)),
+                    $buildString('+', formatValue($value[1], $depth))
+                ]);
             case DIFF_TYPE_NESTED:
                 $nestedString = format($diffTree, $depth + 1);
                 return $buildString(' ', "{\n$nestedString\n$indent  }");
@@ -69,17 +70,17 @@ function formatValue($value, int $depth): string
     }
 
     if (is_array($value)) {
-        $resultStrings = [];
-        foreach ($value as $key => $v) {
+        $resultLines = array_map(function ($key, $v) use ($depth): string {
             $formattedValue = formatValue($v, $depth + 1);
             $indent = buildIndent($depth + 1);
-            $resultStrings[] = "$indent  $key: $formattedValue";
-        }
-        $resultString = implode("\n", $resultStrings);
+            return "$indent  $key: $formattedValue";
+        }, array_keys($value), $value);
+
+        $result = implode("\n", $resultLines);
         $indent = buildIndent($depth);
 
-        return "{\n$resultString\n$indent  }";
+        return "{\n$result\n$indent  }";
     }
 
-    return (string) $value;
+    return (string)$value;
 }
