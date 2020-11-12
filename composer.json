@@ -17,7 +17,7 @@
             "src/Formaters/Stylish.php",
             "src/Formaters/Plain.php",
             "src/Formaters/Json.php",
-            "src/Parser/Parser.php"
+            "src/Parser.php"
         ]
     },
     "scripts": {
