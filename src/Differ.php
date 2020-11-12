@@ -74,7 +74,7 @@ function buildDiff(array $data1, array $data2): array
             ];
         }
 
-        if ($value1 != $value2) {
+        if ($value1 !== $value2) {
             return [
                 'key' => $key,
                 'type' => DIFF_TYPE_CHANGED,
