@@ -5,7 +5,7 @@ validate:
 	composer validate
 
 lint:
-	composer run-script phpcs -- --standard=PSR12 src bin
+	composer run-script phpcs -- --standard=PSR12 src scripts
 
 docker-install:
 	@docker run --rm -v ${PWD}:/app composer:2.0 install --ignore-platform-reqs
