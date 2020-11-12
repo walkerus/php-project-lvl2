@@ -61,7 +61,7 @@ class DifferTest extends TestCase
         ];
     }
 
-    private function getFixtureFullPath($fixtureName): string
+    private function getFixtureFullPath($fixtureName)
     {
         return realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, 'fixtures', $fixtureName]));
     }
