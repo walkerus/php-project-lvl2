@@ -20,42 +20,37 @@ use const Differ\Differ\DIFF_TYPE_UNCHANGED;
  */
 function format(array $diffTree, int $depth = 1): string
 {
-    $resultStrings = [];
-    foreach ($diffTree['children'] as $child) {
-        $type = $child['type'];
-        $key = $child['key'];
-        $value = $child['value'] ?? null;
+    $resultLines = array_map(function (array $diffTree) use ($depth): string {
+        $type = $diffTree['type'];
+        $key = $diffTree['key'];
+        $value = $diffTree['value'] ?? null;
         $indent = buildIndent($depth);
         $buildString = fn(string $prefix, string $value) => "$indent$prefix $key: $value";
 
         switch ($type) {
             case DIFF_TYPE_UNCHANGED:
-                $resultStrings[] = $buildString(' ', formatValue($value, $depth));
-                break;
+                return $buildString(' ', formatValue($value, $depth));
             case DIFF_TYPE_DELETED:
-                $resultStrings[] = $buildString('-', formatValue($value, $depth));
-                break;
+                return $buildString('-', formatValue($value, $depth));
             case DIFF_TYPE_ADDED:
-                $resultStrings[] = $buildString('+', formatValue($value, $depth));
-                break;
+                return $buildString('+', formatValue($value, $depth));
             case DIFF_TYPE_CHANGED:
-                $resultStrings[] = $buildString('-', formatValue($value[0], $depth));
-                $resultStrings[] = $buildString('+', formatValue($value[1], $depth));
-                break;
+                $lines[] = $buildString('-', formatValue($value[0], $depth));
+                $lines[] = $buildString('+', formatValue($value[1], $depth));
+                return implode("\n", $lines);
             case DIFF_TYPE_NESTED:
-                $nestedString = format($child, $depth + 1);
-                $resultStrings[] = $buildString(' ', "{\n$nestedString\n$indent  }");
-                break;
+                $nestedString = format($diffTree, $depth + 1);
+                return $buildString(' ', "{\n$nestedString\n$indent  }");
             default:
                 throw new Exception("Undefined type: $type");
         }
-    }
+    }, $diffTree['children']);
 
-    $resultString = implode("\n", $resultStrings);
+    $result = implode("\n", $resultLines);
 
     return $depth == 1
-        ? "{\n$resultString\n}"
-        : $resultString;
+        ? "{\n$result\n}"
+        : $result;
 }
 
 function buildIndent(int $depth): string

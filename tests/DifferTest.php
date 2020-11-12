@@ -61,11 +61,8 @@ class DifferTest extends TestCase
         ];
     }
 
-    // Может быть методом, но не обязательно
-    private function getFixtureFullPath($fixtureName)
+    private function getFixtureFullPath($fixtureName): string
     {
-        $parts = [__DIR__, 'fixtures', $fixtureName];
-
-        return realpath(implode(DIRECTORY_SEPARATOR, $parts));
+        return realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, 'fixtures', $fixtureName]));
     }
 }

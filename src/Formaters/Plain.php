@@ -20,43 +20,38 @@ use const Differ\Differ\DIFF_TYPE_UNCHANGED;
  */
 function format(array $diffTree, array $path = []): string
 {
-    $resultStrings = [];
-    foreach ($diffTree['children'] as $child) {
-        $type = $child['type'];
-        $value = $child['value'] ?? null;
-        $currentPath = array_merge($path, [$child['key']]);
+    $resultLines = array_map(function (array $diffTree) use ($path): ?string {
+        $type = $diffTree['type'];
+        $value = $diffTree['value'] ?? null;
+        $currentPath = array_merge($path, [$diffTree['key']]);
         $stringCurrentPath = implode('.', $currentPath);
 
         switch ($type) {
             case DIFF_TYPE_UNCHANGED:
-                break;
+                return null;
             case DIFF_TYPE_DELETED:
-                $resultStrings[] = "Property '$stringCurrentPath' was removed";
-                break;
+                return "Property '$stringCurrentPath' was removed";
             case DIFF_TYPE_ADDED:
-                $resultStrings[] = sprintf(
+                return sprintf(
                     "Property '%s' was added with value: %s",
                     $stringCurrentPath,
                     formatValue($value)
                 );
-                break;
             case DIFF_TYPE_CHANGED:
-                $resultStrings[] = sprintf(
+                return sprintf(
                     "Property '%s' was updated. From %s to %s",
                     $stringCurrentPath,
                     formatValue($value[0]),
                     formatValue($value[1])
                 );
-                break;
             case DIFF_TYPE_NESTED:
-                $resultStrings[] = format($child, $currentPath);
-                break;
+                return format($diffTree, $currentPath);
             default:
                 throw new Exception("Undefined type: $type");
         }
-    }
+    }, $diffTree['children']);
 
-    return implode("\n", $resultStrings);
+    return implode("\n", array_filter($resultLines, fn(?string $v) => !is_null($v)));
 }
 
 function formatValue($value): string
@@ -77,5 +72,5 @@ function formatValue($value): string
         return "'$value'";
     }
 
-    return (string) $value;
+    return (string)$value;
 }
