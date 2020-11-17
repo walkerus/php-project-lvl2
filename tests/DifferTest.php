@@ -21,7 +21,10 @@ class DifferTest extends TestCase
     public function testGenDiff(string $expected, string $format, array $filePathsCombinations): void
     {
         foreach ($filePathsCombinations as $filePathsCombination) {
-            $this->assertStringEqualsFile($expected, genDiff($filePathsCombination[0], $filePathsCombination[1], $format));
+            $this->assertStringEqualsFile(
+                $expected,
+                genDiff($filePathsCombination[0], $filePathsCombination[1], $format)
+            );
         }
     }
 
