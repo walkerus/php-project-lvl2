@@ -1,4 +1,4 @@
-name: Linter
+name: Build
 
 on: push
 
@@ -12,3 +12,5 @@ jobs:
         run: make install
       - name: Run linter
         run: make lint
+      - name: Run tests
+        run: composer exec --verbose phpunit tests

@@ -78,7 +78,7 @@ function buildDiff(array $data1, array $data2): array
             return [
                 'key' => $key,
                 'type' => DIFF_TYPE_CHANGED,
-                'value' => [$value1, $value2],
+                'values' => [$value1, $value2],
             ];
         }
 

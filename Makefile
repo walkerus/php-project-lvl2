@@ -5,20 +5,19 @@ validate:
 	composer validate
 
 lint:
-	composer run-script phpcs -- --standard=PSR12 src bin
+	composer run-script phpcs -- --standard=PSR12 src bin tests
 
 docker-install:
-	@docker run --rm -v ${PWD}:/app composer:2.0 install --ignore-platform-reqs
+	@docker-compose run --rm composer install --ignore-platform-reqs
 
 docker-validate:
-	@docker run --rm -v ${PWD}:/app composer:2.0 make validate
-
+	@docker-compose run --rm composer make validate
 
 docker-composer:
-	@docker run --rm --interactive --tty -v ${PWD}:/app composer:2.0 sh
+	@docker-compose run --rm composer sh
 
 docker-lint:
-	@docker run --rm -v ${PWD}:/app composer:2.0 make lint
+	@docker-compose run --rm composer make lint
 
 docker-cli:
-	@docker run --rm --interactive --tty -v ${PWD}:/app -w /app php:7.4-cli bash
+	@docker-compose run --rm -T cli bash

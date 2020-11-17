@@ -12,7 +12,6 @@ if (file_exists($autoloadPath1)) {
 }
 
 use function \Differ\Differ\genDiff;
-use const \Differ\Differ\FORMAT_STYLISH;
 
 $doc = <<<DOC
 gendiff -h
@@ -37,4 +36,4 @@ $result = genDiff(
     $args['<secondFile>'],
     $args['--format'],
 );
-print_r($result . PHP_EOL);
+print_r($result);

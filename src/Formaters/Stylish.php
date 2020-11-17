@@ -36,8 +36,8 @@ function format(array $diffTree, int $depth = 1): string
                 return $buildString('+', formatValue($value, $depth));
             case DIFF_TYPE_CHANGED:
                 return implode("\n", [
-                    $buildString('-', formatValue($value[0], $depth)),
-                    $buildString('+', formatValue($value[1], $depth))
+                    $buildString('-', formatValue($diffTree['values'][0], $depth)),
+                    $buildString('+', formatValue($diffTree['values'][1], $depth))
                 ]);
             case DIFF_TYPE_NESTED:
                 $nestedString = format($diffTree, $depth + 1);

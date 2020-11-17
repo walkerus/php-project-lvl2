@@ -41,8 +41,8 @@ function format(array $diffTree, array $path = []): string
                 return sprintf(
                     "Property '%s' was updated. From %s to %s",
                     $stringCurrentPath,
-                    formatValue($value[0]),
-                    formatValue($value[1])
+                    formatValue($diffTree['values'][0]),
+                    formatValue($diffTree['values'][1])
                 );
             case DIFF_TYPE_NESTED:
                 return format($diffTree, $currentPath);

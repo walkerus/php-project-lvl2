@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  cli:
+    image: php:7.4-cli
+    volumes:
+      - ${PWD}:/app
+  composer:
+    image: composer:2.0
+    volumes:
+      - ${PWD}:/app
