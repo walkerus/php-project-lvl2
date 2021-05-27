@@ -13,9 +13,20 @@ class DifferTest extends TestCase
 {
     /**
      * @dataProvider dataProvider
+     *
      * @param string $expected
      * @param string $format
      * @param array $filePathsCombinations
+     *
+     * @covers \Differ\Differ\genDiff
+     * @covers \Differ\Differ\buildDiff
+     * @covers \Differ\Differ\getFileData
+     * @covers \Differ\Formatters\Json\format
+     * @covers \Differ\Formatters\Plain\format
+     * @covers \Differ\Formatters\Stylish\format
+     * @covers \Differ\Formatters\format
+     * @covers \Differ\Parser\parse
+     *
      * @throws Exception
      */
     public function testGenDiff(string $expected, string $format, array $filePathsCombinations): void
