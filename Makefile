@@ -8,7 +8,7 @@ lint:
 	composer run-script phpcs -- --standard=PSR12 src bin tests
 
 tests-coverage:
-	export XDEBUG_MODE=coverage; vendor/bin/phpunit --coverage-clover coverage.xml tests & cat coverage.xml
+	export XDEBUG_MODE=coverage; vendor/bin/phpunit --coverage-clover coverage.xml tests
 
 docker-install:
 	@docker-compose run --rm composer install --ignore-platform-reqs
