@@ -23,6 +23,7 @@ class DifferTest extends TestCase
      * @covers \Differ\Differ\getFileData
      * @covers \Differ\Formatters\Json\format
      * @covers \Differ\Formatters\Plain\format
+     * @covers \Differ\Formatters\Plain\formatValue
      * @covers \Differ\Formatters\Stylish\format
      * @covers \Differ\Formatters\Stylish\buildIndent
      * @covers \Differ\Formatters\Stylish\formatValue
