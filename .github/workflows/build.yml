@@ -8,8 +8,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Composer install
-        run: make docker-install
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+      - name: Install dependencies
+        run: make install
       - name: Run linter
         run: make lint
       - name: Run tests & publish code coverage
