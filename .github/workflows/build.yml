@@ -12,8 +12,6 @@ jobs:
         run: make docker-install
       - name: Run linter
         run: make lint
-      - name: Run tests
-        run: composer exec --verbose phpunit tests
       - name: Run tests & publish code coverage
         uses: paambaati/codeclimate-action@v2.7.4
         env:
